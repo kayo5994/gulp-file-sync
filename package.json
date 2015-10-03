@@ -1,0 +1,32 @@
+{
+  "name": "gulp-file-sync",
+  "version": "0.9.0",
+  "description": "Sync file It keeps your files synced between two directory. In other words, any change of files in one directory will automatically take place in another one.",
+  "main": "index.js",
+  "dependencies": {
+    "crc": "^3.3.0",
+    "fs-extra": "^0.22.1",
+    "gulp-util": "^3.0.6",
+    "through2": "^2.0.0",
+    "through-gulp": "^0.3.8"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kayo5994/gulp-file-sync.git"
+  },
+  "keywords": [
+    "gulpplugin",
+    "gulpfriendly",
+    "sync"
+  ],
+  "author": "Kayo Lee <330956999@qq.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kayo5994/gulp-file-sync/issues"
+  },
+  "homepage": "https://github.com/kayo5994/gulp-file-sync#readme"
+}
