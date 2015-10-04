@@ -60,7 +60,7 @@ type: `string` or `array` or `regex` or `function`
 Either a string, array, regex, or function to exclude some specific files. For example:
 
 ```js
-// ignore all .svn files
+// ignore all .log files
 fileSync('source directory', 'destination directory', {
   ignore: '.log'  
 })
@@ -72,7 +72,7 @@ fileSync('source directory', 'destination directory', {
 })
 fileSync('source directory', 'destination directory', {
   ignore: function(dir, file) {
-            return file === '.svn';
+            return file === '.log';
           } 
 })
 ```
