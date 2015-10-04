@@ -37,49 +37,49 @@ var isIgnored = function(_options, _dir, _file) {
 };
 
 // 判断两个文件是否为相同的文件（即文件没有变动）
-var isSameFile = function(_src, _dist) {
+var isSameFile = function(_src, _dest) {
 	var _srcCrc = crc.crc32(fs.readFileSync(_src)).toString(16),
-	    _distCrc = crc.crc32(fs.readFileSync(_dist)).toString(16);
-	return _srcCrc === _distCrc;
+	    _destCrc = crc.crc32(fs.readFileSync(_dest)).toString(16);
+	return _srcCrc === _destCrc;
 };
 
 // 移除文件
-var remove = function(_options, _src, _dist) {
+var remove = function(_options, _src, _dest) {
 
-	var _files = fs.readdirSync(_dist);
+	var _files = fs.readdirSync(_dest);
 	_files.forEach(function(_file) {
-		if (isIgnored(_options, _dist, _file)) {
+		if (isIgnored(_options, _dest, _file)) {
 			return;
 		}
 		var _fullPathSrc = path.join(_src, _file),
-		    _fullPathDist = path.join(_dist, _file),
-        _statDist = fs.statSync(_fullPathDist);
+		    _fullPathDest = path.join(_dest, _file),
+        _statDest = fs.statSync(_fullPathDest);
 
-    if (_statDist.isDirectory() && !_options.recursive) {
+    if (_statDest.isDirectory() && !_options.recursive) {
       // 不允许递归子目录
       return;
     }
 
 		if (!fs.existsSync(_fullPathSrc)) {
       // 如果一个文件不在源目录而在目标目录，则删除该文件
-			fs.deleteSync(_fullPathDist);
+			fs.deleteSync(_fullPathDest);
 
-      _options.deleteFileCallback(_fullPathSrc, _fullPathDist);
+      _options.deleteFileCallback(_fullPathSrc, _fullPathDest);
 
 		} else {
       var _statSrc = fs.statSync(_fullPathSrc);
-			if (_statSrc.isFile() !== _statDist.isFile() || _statSrc.isDirectory() !== _statDist.isDirectory()) {
-				fs.deleteSync(_fullPathDist); 
+			if (_statSrc.isFile() !== _statDest.isFile() || _statSrc.isDirectory() !== _statDest.isDirectory()) {
+				fs.deleteSync(_fullPathDest); 
 
-			} else if (_statDist.isDirectory()) {
-				remove(_options, _fullPathSrc, _fullPathDist);
+			} else if (_statDest.isDirectory()) {
+				remove(_options, _fullPathSrc, _fullPathDest);
 			}
 		}
 	} );
 };
 
 // 新增文件
-var add = function(_options, _src, _dist) {
+var add = function(_options, _src, _dest) {
 
 	var _files = fs.readdirSync(_src);
 	_files.forEach(function(_file) {
@@ -87,35 +87,35 @@ var add = function(_options, _src, _dist) {
 			return;
 		}
 		var _fullPathSrc = path.join(_src, _file),
-		    _fullPathDist = path.join(_dist, _file),
-		    _existsDist = fs.existsSync(_fullPathDist),
+		    _fullPathDest = path.join(_dest, _file),
+		    _existsDest = fs.existsSync(_fullPathDest),
 		    _statSrc = fs.statSync(_fullPathSrc);
 		if (_statSrc.isFile()) {
-			if (_existsDist) {
-				var _statDist = fs.statSync(_fullPathDist);
-				if (_statDist.isDirectory()) {
+			if (_existsDest) {
+				var _statDest = fs.statSync(_fullPathDest);
+				if (_statDest.isDirectory()) {
           // 如果在目标目录中存在一个目录与源目录中的文件同名，则删除该目录并把文件拷贝到目标目录，并且视为更新文件去处理
-					fs.deleteSync(_fullPathDist);
+					fs.deleteSync(_fullPathDest);
           // forece 参数为 true 表明可以操作 index.js 所在目录更上层的目录内的文件
-					fs.copySync(_fullPathSrc, _fullPathDist, { force: true });
+					fs.copySync(_fullPathSrc, _fullPathDest, { force: true });
 
-          _options.updateFileCallback(_fullPathSrc, _fullPathDist);
-				} else if (_statDist.isFile()) {
+          _options.updateFileCallback(_fullPathSrc, _fullPathDest);
+				} else if (_statDest.isFile()) {
           // 源目录与目标目录都存在该文件，判断该文件是否为相同的文件（没有被修改过）
-					if (!isSameFile(_fullPathSrc, _fullPathDist)) {
+					if (!isSameFile(_fullPathSrc, _fullPathDest)) {
             // 文件不相同，即文件被修改过，则把新文件拷贝到目标目录
             // forece 参数为 true 表明可以操作 index.js 所在目录更上层的目录内的文件
-						fs.copySync(_fullPathSrc, _fullPathDist, { force: true });
+						fs.copySync(_fullPathSrc, _fullPathDest, { force: true });
 
-            _options.updateFileCallback(_fullPathSrc, _fullPathDist);
+            _options.updateFileCallback(_fullPathSrc, _fullPathDest);
 					}
 				}
 			} else {
         // 如果文件只存在于源目录而不在目标目录，即为新增文件，同步到目标目录
         // forece 参数为 true 表明可以操作 index.js 所在目录更上层的目录内的文件
-				fs.copySync(_fullPathSrc, _fullPathDist, { force: true });
+				fs.copySync(_fullPathSrc, _fullPathDest, { force: true });
 
-        _options.addFileCallback(_fullPathSrc, _fullPathDist);
+        _options.addFileCallback(_fullPathSrc, _fullPathDest);
 			}
 
 		} else if (_statSrc.isDirectory()) {
@@ -125,47 +125,47 @@ var add = function(_options, _src, _dist) {
         return;
       }
 
-			if (!_existsDist) {
-				fs.mkdirsSync(_fullPathDist);
+			if (!_existsDest) {
+				fs.mkdirsSync(_fullPathDest);
 			}
-			add(_options, _fullPathSrc, _fullPathDist);
+			add(_options, _fullPathSrc, _fullPathDest);
 		}
 	} );
 };
 
 // 同步文件操作
-var fileSync = function(_src, _dist, _options) {
+var fileSync = function(_src, _dest, _options) {
 	_options = _options || {};
 
   // 是否递归所有子目录的参数的默认值
   _options.recursive = (_options.recursive === undefined) || _options.recursive; 
 
   // 新增文件时输出到控制台的默认 callback 
-  _options.addFileCallback  = _options.addFileCallback || function(_fullPathSrc, _fullPathDist) {
-    gutil.log('同步增加文件到 ' + _fullPathDist);
+  _options.addFileCallback  = _options.addFileCallback || function(_fullPathSrc, _fullPathDest) {
+    gutil.log('同步增加文件到 ' + _fullPathDest);
   };
 
   // 删除文件时输出到控制台的默认 callback
-  _options.deleteFileCallback  = _options.deleteFileCallback || function(_fullPathSrc, _fullPathDist) {
-    gutil.log('同步删除文件 ' + _fullPathDist);
+  _options.deleteFileCallback  = _options.deleteFileCallback || function(_fullPathSrc, _fullPathDest) {
+    gutil.log('同步删除文件 ' + _fullPathDest);
   };
 
   // 修改文件时输出到控制台的默认 callback
-  _options.updateFileCallback  = _options.updateFileCallback || function(_fullPathSrc, _fullPathDist) {
-    gutil.log('同步修改文件 ' + _fullPathDist);
+  _options.updateFileCallback  = _options.updateFileCallback || function(_fullPathSrc, _fullPathDest) {
+    gutil.log('同步修改文件 ' + _fullPathDest);
   };
 
 	var func = function(_callback) {		
-		if (!_src || !_dist) {
+		if (!_src || !_dest) {
 			this.emit('error', new gutil.PluginError(pluginDisplayName, 'Invalid parameter'));
 			callback();
 			return;
 		}
 		
     // 检查目标目录是否存在，如果目标目录不存在则创建一个，如果目标目录不存在而直接写入文件则会 crash
-		fs.ensureDirSync(_dist);
-	  remove(_options, _src, _dist);
-		add(_options, _src, _dist);
+		fs.ensureDirSync(_dest);
+	  remove(_options, _src, _dest);
+		add(_options, _src, _dest);
 		
 		_callback();
 	};
