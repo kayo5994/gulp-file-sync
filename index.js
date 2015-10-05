@@ -61,7 +61,7 @@ var remove = function(_options, _src, _dest) {
     }
 
 		if (!fs.existsSync(_fullPathSrc)) {
-      _options.deleteUpdateFileCallback && _options.deleteUpdateFileCallback(_fullPathSrc);
+      _options.beforeDeleteFileCallback && _options.beforeDeleteFileCallback(_fullPathSrc);
 
       // 如果一个文件不在源目录而在目标目录，则删除该文件
 			fs.deleteSync(_fullPathDest);
@@ -121,7 +121,7 @@ var add = function(_options, _src, _dest) {
 			} else {
         // 如果文件只存在于源目录而不在目标目录，即为新增文件，同步到目标目录
         
-        _options.addUpdateFileCallback && _options.addUpdateFileCallback(_fullPathSrc);
+        _options.beforeAddFileCallback && _options.beforeAddFileCallback(_fullPathSrc);
      
         // forece 参数为 true 表明可以操作 index.js 所在目录更上层的目录内的文件
 				fs.copySync(_fullPathSrc, _fullPathDest, { force: true });
