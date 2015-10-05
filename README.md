@@ -91,8 +91,8 @@ function(fullPathSrc, fullPathDest) {
 
 This function is called when file was added on source directory.
 
- * `fullPathSrc` - is the path of file that added on source directory.
- * `fullPathDest` - is the path of file that copied to destination directory.
+ * `fullPathSrc` - is the path of file that was added on source directory.
+ * `fullPathDest` - is the path of file that was copied to destination directory.
 
 #### options.deleteFileCallback
 
@@ -109,8 +109,8 @@ function(fullPathSrc, fullPathDest) {
 
 This function is called when file was deleted on source directory.
 
- * `fullPathSrc` - is the path of file that deleted on source directory.
- * `fullPathDest` - is the path of file that deleted on destination directory.
+ * `fullPathSrc` - is the path of file that was deleted on source directory.
+ * `fullPathDest` - is the path of file that was deleted on destination directory.
 
 #### options.updateFileCallback
 
@@ -127,8 +127,32 @@ function(fullPathSrc, fullPathDest) {
 
 This function is called when file was updated on source directory.
 
- * `fullPathSrc` - is the path of file that updated on source directory.
- * `fullPathDest` - is the path of file that copied to destination directory.
+ * `fullPathSrc` - is the path of file that was updated on source directory.
+ * `fullPathDest` - is the path of file that was copied to destination directory.
+
+#### options.beforeAddFileCallback
+
+type: `function(fullPathSrc)`
+
+This function is called before file is added on source directory.
+
+ * `fullPathSrc` - is the path of file that was added on source directory.
+
+#### options.beforeDeleteFileCallback
+
+type: `function(fullPathSrc)`
+
+This function is called before file is deleted on source directory.
+
+ * `fullPathSrc` - is the path of file that was deleted on source directory.
+
+#### options.beforeUpdateFileCallback
+
+type: `function(fullPathSrc)`
+
+This function is called before file is updated on source directory.
+
+ * `fullPathSrc` - is the path of file that was updated on source directory.
 
 
 ## [Changelog](https://github.com/kayo5994/gulp-file-sync/commits/master)
