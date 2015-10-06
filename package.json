@@ -23,7 +23,7 @@
     "sync"
   ],
   "author": "Kayo Lee <330956999@qq.com>",
-  "license": "SEE LICENSE IN <LICENSE>",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/kayo5994/gulp-file-sync/issues"
   },
