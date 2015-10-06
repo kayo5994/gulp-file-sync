@@ -64,14 +64,18 @@ var remove = function(_options, _src, _dest) {
       _options.beforeDeleteFileCallback && _options.beforeDeleteFileCallback(_fullPathSrc);
 
       // 如果一个文件不在源目录而在目标目录，则删除该文件
-			fs.deleteSync(_fullPathDest);
+			fs.removeSync(_fullPathDest);
 
       _options.deleteFileCallback(_fullPathSrc, _fullPathDest);
 
 		} else {
       var _statSrc = fs.statSync(_fullPathSrc);
 			if (_statSrc.isFile() !== _statDest.isFile() || _statSrc.isDirectory() !== _statDest.isDirectory()) {
-				fs.deleteSync(_fullPathDest); 
+        _options.beforeDeleteFileCallback && _options.beforeDeleteFileCallback(_fullPathSrc);
+
+			  fs.removeSync(_fullPathDest);
+
+        _options.deleteFileCallback(_fullPathSrc, _fullPathDest);
 
 			} else if (_statDest.isDirectory()) {
 				remove(_options, _fullPathSrc, _fullPathDest);
