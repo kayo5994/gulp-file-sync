@@ -150,6 +150,13 @@ var add = function(_options, _src, _dest) {
 
 // 同步文件操作
 var fileSync = function(_src, _dest, _options) {
+  if (typeof(_src) !== 'string') { 
+    throw new gutil.PluginError(pluginDisplayName, 'Missing source directory or type is not a string.')
+  }
+  if (typeof(_dest) !== 'string') {
+    throw new gutil.PluginError(pluginDisplayName, 'Missing destination directory or type is not a string.')
+  }
+
 	_options = _options || {};
 
   // 是否递归所有子目录的参数的默认值
