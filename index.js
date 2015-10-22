@@ -1,7 +1,6 @@
 'use strict';
 
-var through = require('through-gulp'), 
-    gutil = require('gulp-util'),
+var gutil = require('gulp-util'),
     fs = require('fs-extra'),
     path = require('path'),
     crc = require('crc'),
@@ -101,7 +100,7 @@ var add = function(_options, _src, _dest) {
 				var _statDest = fs.statSync(_fullPathDest);
 				if (_statDest.isDirectory()) {
           // 如果在目标目录中存在一个目录与源目录中的文件同名，则删除该目录并把文件拷贝到目标目录，并且视为更新文件去处理
-					fs.deleteSync(_fullPathDest);
+					fs.removeSync(_fullPathDest);
 
           _options.beforeUpdateFileCallback && _options.beforeUpdateFileCallback(_fullPathSrc);
 
@@ -177,28 +176,10 @@ var fileSync = function(_src, _dest, _options) {
     gutil.log('同步修改文件 ' + _fullPathDest);
   };
 
-	var func = function(_callback) {		
-		if (!_src || !_dest) {
-			this.emit('error', new gutil.PluginError(pluginDisplayName, 'Invalid parameter'));
-			callback();
-			return;
-		}
-		
-    // 检查目标目录是否存在，如果目标目录不存在则创建一个，如果目标目录不存在而直接写入文件则会 crash
-		fs.ensureDirSync(_dest);
-	  remove(_options, _src, _dest);
-		add(_options, _src, _dest);
-		
-		_callback();
-	};
-
-	return through(
-		function(_file, _enc, _callback) {
-			this.push(_file);
-			_callback();
-		},
-		func
-	);
+  // 检查目标目录是否存在，如果目标目录不存在则创建一个，如果目标目录不存在而直接写入文件则会 crash
+  fs.ensureDirSync(_dest);
+  remove(_options, _src, _dest);
+  add(_options, _src, _dest);
 };
 
 module.exports = fileSync;

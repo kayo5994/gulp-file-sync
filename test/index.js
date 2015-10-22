@@ -1,12 +1,57 @@
-var gutil = require('gulp-util'),
-    join = require('path').join,
+var gulp = require('gulp'), 
+    gutil = require('gulp-util'),
+    fs = require('fs-extra'),
+    path = require('path'),
     expect = require('chai').expect,
     fileSync = require('..');
 
+// 相关文件目录
+var srcDirectory = 'test/src',
+    destDirectory = 'test/dest',
+    updateDirectory = 'test/update';
+
 describe('fileSync(src, dest, options)', function () {
 
+  var fileSyncWithOption = function(options) {
+    options.addFileCallback = function() {};
+    options.deleteFileCallback = function() {};
+    options.updateFileCallback = function() {};
+
+    fileSync(srcDirectory, destDirectory, options);
+  }
+
+  // 清空目标目录文件夹，准备开始测试流程
+  var _destFiles = fs.readdirSync(destDirectory);
+  _destFiles.forEach(function(_file) {
+    var _fullPathDest = path.join(destDirectory, _file),
+        _existsDest = fs.existsSync(_fullPathDest);
+    
+    if (_existsDest) {
+      fs.removeSync(_fullPathDest);
+    }
+  });
+
+  // 测试参数遗漏时是否 throw
   it('throws when `src` is missing or `src` is not a string', function () {
     expect(fileSync).to.throw('Missing source directory or type is not a string.');
+  });
+
+  // 测试非递归同步 
+  fileSyncWithOption({recursive: false}); 
+
+  it('Sync directory non-recursively', function () {
+    var _srcFiles = fs.readdirSync(srcDirectory);
+    _srcFiles.forEach(function(_file) {
+      var _filePathSrc = path.join(srcDirectory, _file),
+          _statSrc = fs.statSync(_filePathSrc),
+          _fullPathDest = path.join(destDirectory, _file);
+
+      if (_statSrc.isDirectory()) {
+        expect(fs.existsSync(_fullPathDest)).to.be.false;
+      } else {
+        expect(fs.existsSync(_fullPathDest)).to.be.true;
+      }
+    });
   });
 
 });

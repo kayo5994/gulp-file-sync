@@ -26,11 +26,7 @@ var gulp = require('gulp'),
 
 gulp.task('sync', function() {
   gulp.watch(['src/*.*'], function() {
-    return gulp.src('src/*.*')
-               .pipe(fileSync('src', 'dest', {recursive: false}))
-               .on('error', function(event) {
-                 console.log('Error is ' + event.error);
-               });
+    fileSync('src', 'dest', {recursive: false});
   });
 });
 ```
