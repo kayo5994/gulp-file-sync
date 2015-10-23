@@ -1,3 +1,5 @@
+'use strict';
+
 var gulp = require('gulp'), 
     gutil = require('gulp-util'),
     fs = require('fs-extra'),
@@ -20,7 +22,9 @@ describe('fileSync(src, dest, options)', function () {
     fileSync(srcDirectory, destDirectory, options);
   }
 
-  // 清空目标目录文件夹，准备开始测试流程
+  // 确保目标目录存在
+  fs.ensureDirSync(destDirectory);
+  // 清空目标目录，准备开始测试流程
   var _destFiles = fs.readdirSync(destDirectory);
   _destFiles.forEach(function(_file) {
     var _fullPathDest = path.join(destDirectory, _file),
@@ -37,20 +41,44 @@ describe('fileSync(src, dest, options)', function () {
   });
 
   // 测试非递归同步 
-  fileSyncWithOption({recursive: false}); 
+  describe('non-recursively', function() {
 
-  it('Sync directory non-recursively', function () {
-    var _srcFiles = fs.readdirSync(srcDirectory);
-    _srcFiles.forEach(function(_file) {
-      var _filePathSrc = path.join(srcDirectory, _file),
-          _statSrc = fs.statSync(_filePathSrc),
-          _fullPathDest = path.join(destDirectory, _file);
+    before(function() {
+      fileSyncWithOption({recursive: false}); 
+    });
 
-      if (_statSrc.isDirectory()) {
-        expect(fs.existsSync(_fullPathDest)).to.be.false;
-      } else {
+    it('Sync directory non-recursively', function () {
+      var _srcFiles = fs.readdirSync(srcDirectory);
+      _srcFiles.forEach(function(_file) {
+        var _filePathSrc = path.join(srcDirectory, _file),
+            _statSrc = fs.statSync(_filePathSrc),
+            _fullPathDest = path.join(destDirectory, _file);
+
+        if (_statSrc.isDirectory()) {
+          expect(fs.existsSync(_fullPathDest)).to.be.false;
+        } else {
+          expect(fs.existsSync(_fullPathDest)).to.be.true;
+        }
+      });
+    });
+  });
+
+  // 测试递归同步 
+  describe('recursively', function() {
+
+    before(function() {
+      fileSyncWithOption({recursive: true}); 
+    });
+
+    it('Sync directory recursively', function () {
+      var _srcFiles = fs.readdirSync(srcDirectory);
+      _srcFiles.forEach(function(_file) {
+        var _filePathSrc = path.join(srcDirectory, _file),
+            _statSrc = fs.statSync(_filePathSrc),
+            _fullPathDest = path.join(destDirectory, _file);
+
         expect(fs.existsSync(_fullPathDest)).to.be.true;
-      }
+      });
     });
   });
 
