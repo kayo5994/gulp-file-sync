@@ -3,12 +3,15 @@
 [![NPM version][npm-image]][npm-url]
 [![Dependency Status][david-dm-image]][david-dm-url]
 [![Downloads][downloads-image]][npm-url]
+[![Build Status][build-image]][build-result]
 
 [npm-url]:         https://npmjs.org/package/gulp-file-sync
 [npm-image]:       https://img.shields.io/npm/v/gulp-file-sync.svg
 [david-dm-url]:    https://david-dm.org/kayo5994/gulp-file-sync
 [david-dm-image]:  https://img.shields.io/david/kayo5994/gulp-file-sync.svg
 [downloads-image]: https://img.shields.io/npm/dm/gulp-file-sync.svg
+[build-image]:     https://travis-ci.org/kayo5994/gulp-file-sync.png
+[build-result]:    https://travis-ci.org/kayo5994/gulp-file-sync.png
 
 > Sync file It keeps your files synced between two directory. In other words, any change of files in one directory will automatically take place in another one.
 
