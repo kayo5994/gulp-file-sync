@@ -2,6 +2,7 @@
 
 [![NPM version][npm-image]][npm-url]
 [![Build Status][build-image]][build-result]
+[![Coveralls Status][coveralls-image]][coveralls-url]
 [![Dependency Status][david-dm-image]][david-dm-url]
 [![Downloads][downloads-image]][npm-url]
 
@@ -9,6 +10,8 @@
 [npm-image]:       https://img.shields.io/npm/v/gulp-file-sync.svg
 [build-image]:     https://travis-ci.org/kayo5994/gulp-file-sync.png
 [build-result]:    https://travis-ci.org/kayo5994/gulp-file-sync.png
+[coveralls-url]: https://coveralls.io/r/kayo5994/gulp-file-sync
+[coveralls-image]: https://img.shields.io/coveralls/kayo5994/gulp-file-sync
 [david-dm-url]:    https://david-dm.org/kayo5994/gulp-file-sync
 [david-dm-image]:  https://img.shields.io/david/kayo5994/gulp-file-sync.svg
 [downloads-image]: https://img.shields.io/npm/dm/gulp-file-sync.svg
