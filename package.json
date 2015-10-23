@@ -9,10 +9,14 @@
     "gulp-util": "^3.0.6"
   },
   "devDependencies": {
-    "chai": "^3.3.0"
+    "chai": "^3.3.0",
+    "coveralls": "^2.11.4",
+    "mocha": "^2.3.3",
+    "mocha-lcov-reporter": "^1.0.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
   "repository": {
     "type": "git",
