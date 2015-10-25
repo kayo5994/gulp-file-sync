@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "crc": "^3.3.0",
-    "fs-extra": "^0.24.0",
+    "fs-extra": "^0.25.0",
     "gulp-util": "^3.0.6"
   },
   "devDependencies": {
