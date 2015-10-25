@@ -5,7 +5,5 @@ node_js:
   - "0.10"
 before_script: 
   - npm install -g istanbul
-  - npm install mocha --save-dev
-  - npm install fs-extra --save-dev
-  - npm install chai --save-dev
+  - npm install
 script: npm run cov
