@@ -6,4 +6,6 @@ node_js:
 before_script: 
   - npm install -g istanbul
   - npm install mocha --save-dev
+  - npm install fs-extra --save-dev
+  - npm install chai --save-dev
 script: npm run cov

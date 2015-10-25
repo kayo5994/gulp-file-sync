@@ -1,8 +1,6 @@
 'use strict';
 
-var gulp = require('gulp'), 
-    gutil = require('gulp-util'),
-    fs = require('fs-extra'),
+var fs = require('fs-extra'),
     path = require('path'),
     expect = require('chai').expect,
     fileSync = require('..');
