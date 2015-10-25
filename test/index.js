@@ -23,15 +23,18 @@ describe('fileSync(src, dest, options)', function () {
   // 确保目标目录存在
   fs.ensureDirSync(destDirectory);
   // 清空目标目录，准备开始测试流程
-  var _destFiles = fs.readdirSync(destDirectory);
-  _destFiles.forEach(function(_file) {
-    var _fullPathDest = path.join(destDirectory, _file),
-        _existsDest = fs.existsSync(_fullPathDest);
-    
-    if (_existsDest) {
-      fs.removeSync(_fullPathDest);
-    }
-  });
+  var _clearDestDirectory = function() {
+    var _destFiles = fs.readdirSync(destDirectory);
+    _destFiles.forEach(function(_file) {
+      var _fullPathDest = path.join(destDirectory, _file),
+          _existsDest = fs.existsSync(_fullPathDest);
+      
+      if (_existsDest) {
+        fs.removeSync(_fullPathDest);
+      }
+    });
+  }
+  _clearDestDirectory();
 
   // 测试参数遗漏时是否 throw
   it('throws when `src` is missing or `src` is not a string', function () {
@@ -76,6 +79,31 @@ describe('fileSync(src, dest, options)', function () {
             _fullPathDest = path.join(destDirectory, _file);
 
         expect(fs.existsSync(_fullPathDest)).to.be.true;
+      });
+    });
+  });
+
+  // 测试排除文件
+  var _shouldIgnoreFile = 'ignore.png';
+  describe('ignore', function() {
+
+    before(function() {
+      _clearDestDirectory();
+      fileSyncWithOption({ignore: _shouldIgnoreFile}); 
+    });
+
+    it('Sync directory but ignore a file', function () {
+      var _srcFiles = fs.readdirSync(srcDirectory);
+      _srcFiles.forEach(function(_file) {
+        var _filePathSrc = path.join(srcDirectory, _file),
+            _statSrc = fs.statSync(_filePathSrc),
+            _fullPathDest = path.join(destDirectory, _file);
+
+        if (_file === _shouldIgnoreFile) {
+          expect(fs.existsSync(_fullPathDest)).to.be.false;
+        } else {
+          expect(fs.existsSync(_fullPathDest)).to.be.true;
+        }
       });
     });
   });
