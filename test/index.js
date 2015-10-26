@@ -42,6 +42,11 @@ describe('fileSync(src, dest, options)', function () {
     expect(fileSync).to.throw('Missing source directory or type is not a string.');
   });
 
+  // 测试参数遗漏时是否 throw
+  it('Throws when `dest` is missing or `dest` is not a string', function () {
+    expect(fileSync.bind(undefined, srcDirectory)).to.throw('Missing destination directory or type is not a string.');
+  });
+
   // 测试非递归同步 
   describe('non-recursively', function() {
 
@@ -138,10 +143,11 @@ describe('fileSync(src, dest, options)', function () {
   });
 
   // 测试更新和删除文件
+  var _specialDir = '/ignore.png';
   describe('update and delete', function() {
 
     before(function() {
-      _clearDestDirectory();
+      fs.mkdirSync(updateDirectory + _specialDir);
       _fileSyncWithOption(updateDirectory); 
     });
 
@@ -154,6 +160,10 @@ describe('fileSync(src, dest, options)', function () {
 
         expect(fs.existsSync(_fullPathSrc)).to.be.true;
       });
+    });
+
+    after(function() {
+      fs.removeSync(updateDirectory + _specialDir);
     });
   });
 
