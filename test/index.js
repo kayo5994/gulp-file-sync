@@ -85,28 +85,56 @@ describe('fileSync(src, dest, options)', function () {
   });
 
   // 测试排除文件
-  var _shouldIgnoreFile = 'ignore.png';
   describe('ignore', function() {
 
-    before(function() {
-      _clearDestDirectory();
-      _fileSyncWithOption(srcDirectory, {ignore: _shouldIgnoreFile}); 
-    });
+    var _shouldIgnoreFile = 'ignore.png';
+    describe('ignore by function', function() {
+      before(function() {
+        _clearDestDirectory();
+        _fileSyncWithOption(srcDirectory, {ignore: function(_dir, _file) {
+          return _file === _shouldIgnoreFile;
+        }}); 
+      });
 
-    it('Sync directory but ignore a file', function () {
-      var _srcFiles = fs.readdirSync(srcDirectory);
-      _srcFiles.forEach(function(_file) {
-        var _filePathSrc = path.join(srcDirectory, _file),
-            _statSrc = fs.statSync(_filePathSrc),
-            _fullPathDest = path.join(destDirectory, _file);
+      it('Sync directory but ignore a file', function () {
+        var _srcFiles = fs.readdirSync(srcDirectory);
+        _srcFiles.forEach(function(_file) {
+          var _filePathSrc = path.join(srcDirectory, _file),
+              _statSrc = fs.statSync(_filePathSrc),
+              _fullPathDest = path.join(destDirectory, _file);
 
-        if (_file === _shouldIgnoreFile) {
-          expect(fs.existsSync(_fullPathDest)).to.be.false;
-        } else {
-          expect(fs.existsSync(_fullPathDest)).to.be.true;
-        }
+          if (_file === _shouldIgnoreFile) {
+            expect(fs.existsSync(_fullPathDest)).to.be.false;
+          } else {
+            expect(fs.existsSync(_fullPathDest)).to.be.true;
+          }
+        });
       });
     });
+
+    var _shouldIgnoreFileList = ['ignore.png', 'ignore_other.png'];
+    describe('ignore by array', function() {
+      before(function() {
+        _clearDestDirectory();
+        _fileSyncWithOption(srcDirectory, {ignore: _shouldIgnoreFileList}); 
+      });
+
+      it('Sync directory but ignore some files', function () {
+        var _srcFiles = fs.readdirSync(srcDirectory);
+        _srcFiles.forEach(function(_file) {
+          var _filePathSrc = path.join(srcDirectory, _file),
+              _statSrc = fs.statSync(_filePathSrc),
+              _fullPathDest = path.join(destDirectory, _file);
+
+          if (isElementInArray(_shouldIgnoreFileList, _file)) {
+            expect(fs.existsSync(_fullPathDest)).to.be.false;
+          } else {
+            expect(fs.existsSync(_fullPathDest)).to.be.true;
+          }
+        });
+      });
+    });
+
   });
 
   // 测试更新和删除文件
@@ -179,3 +207,15 @@ describe('fileSync(src, dest, options)', function () {
   });
 
 });
+
+// 工具方法
+
+// 判断一个元素是否存在于某个数组中
+var isElementInArray = function(_array, _element) {
+  for(var _i = 0; _i < _array.length; _i++) {
+    if(_element === _array[_i]) {
+      return true;
+    }
+  }
+  return false;
+}
