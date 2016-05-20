@@ -38,7 +38,7 @@ var isIgnored = function(_options, _dir, _file) {
 // 判断两个文件是否为相同的文件（即文件没有变动）
 var isSameFile = function(_src, _dest) {
 	var _srcCrc = crc.crc32(fs.readFileSync(_src)).toString(16),
-	    _destCrc = crc.crc32(fs.readFileSync(_dest)).toString(16);
+      _destCrc = crc.crc32(fs.readFileSync(_dest)).toString(16);
 	return _srcCrc === _destCrc;
 };
 
@@ -51,7 +51,7 @@ var remove = function(_options, _src, _dest) {
 			return;
 		}
 		var _fullPathSrc = path.join(_src, _file),
-		    _fullPathDest = path.join(_dest, _file),
+        _fullPathDest = path.join(_dest, _file),
         _statDest = fs.statSync(_fullPathDest);
 
     if (_statDest.isDirectory() && !_options.recursive) {
@@ -72,7 +72,7 @@ var remove = function(_options, _src, _dest) {
 			if (_statSrc.isFile() !== _statDest.isFile() || _statSrc.isDirectory() !== _statDest.isDirectory()) {
         _options.beforeDeleteFileCallback && _options.beforeDeleteFileCallback(_fullPathSrc);
 
-			  fs.removeSync(_fullPathDest);
+        fs.removeSync(_fullPathDest);
 
         _options.deleteFileCallback(_fullPathSrc, _fullPathDest);
 
@@ -92,9 +92,9 @@ var add = function(_options, _src, _dest) {
 			return;
 		}
 		var _fullPathSrc = path.join(_src, _file),
-		    _fullPathDest = path.join(_dest, _file),
-		    _existsDest = fs.existsSync(_fullPathDest),
-		    _statSrc = fs.statSync(_fullPathSrc);
+        _fullPathDest = path.join(_dest, _file),
+        _existsDest = fs.existsSync(_fullPathDest),
+        _statSrc = fs.statSync(_fullPathSrc);
 		if (_statSrc.isFile()) {
 			if (_existsDest) {
 				var _statDest = fs.statSync(_fullPathDest);
