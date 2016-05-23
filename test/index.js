@@ -118,7 +118,7 @@ describe('fileSync(src, dest, options)', function () {
     describe('ignore by function', function() {
       before(function() {
         _clearDestDirectory();
-        _fileSyncWithOption(srcDirectory, { ignore(_dir, _file) {
+        _fileSyncWithOption(srcDirectory, { ignore: function(_dir, _file) {
           return _file === _shouldIgnoreFile;
         } }); 
       });
@@ -192,34 +192,34 @@ describe('fileSync(src, dest, options)', function () {
 
     before(function() {
       fileSync(srcDirectory, destDirectory, {
-        beforeAddFileCallback(_fullPathSrc) {
+        beforeAddFileCallback: function(_fullPathSrc) {
           _add.before = _fullPathSrc;
         },
-        addFileCallback(_fullPathSrc) {
+        addFileCallback: function(_fullPathSrc) {
           _add.done = _fullPathSrc;
         },
-        updateFileCallback() {
+        updateFileCallback: function() {
           placeHolderFunction();
         },
-        deleteFileCallback() {
+        deleteFileCallback: function() {
           placeHolderFunction();
         }
       }); 
 
       fileSync(updateDirectory, destDirectory, {
-        addFileCallback() {
+        addFileCallback: function() {
           placeHolderFunction();
         },
-        beforeUpdateFileCallback(_fullPathSrc) {
+        beforeUpdateFileCallback: function(_fullPathSrc) {
           _update.before = _fullPathSrc;
         },
-        beforeDeleteFileCallback(_fullPathSrc) {
+        beforeDeleteFileCallback: function(_fullPathSrc) {
           _delete.before = _fullPathSrc;
         },
-        updateFileCallback(_fullPathSrc) {
+        updateFileCallback: function(_fullPathSrc) {
           _update.done = _fullPathSrc;
         },
-        deleteFileCallback(_fullPathSrc) {
+        deleteFileCallback: function(_fullPathSrc) {
           _delete.done = _fullPathSrc;
         }
       });

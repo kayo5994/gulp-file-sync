@@ -182,7 +182,7 @@ module.exports = {
             "always"
         ],
         "object-property-newline": "error",
-        "object-shorthand": "error",
+        "object-shorthand": 0,
         "one-var": "off",
         "one-var-declaration-per-line": "error",
         "operator-assignment": "error",
