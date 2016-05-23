@@ -5,6 +5,18 @@ var fs = require('fs-extra'),
     expect = require('chai').expect,
     fileSync = require('..');
 
+// 工具方法
+
+// 判断一个元素是否存在于某个数组中
+var isElementInArray = function(_array, _element) {
+  for (var _i = 0; _i < _array.length; _i += 1 ) {
+    if (_element === _array[_i]) {
+      return true;
+    }
+  }
+  return false;
+}
+
 // 相关文件目录
 var srcDirectory = 'test/src',
     destDirectory = 'test/dest',
@@ -51,7 +63,7 @@ describe('fileSync(src, dest, options)', function () {
   describe('non-recursively', function() {
 
     before(function() {
-      _fileSyncWithOption(srcDirectory, {recursive: false}); 
+      _fileSyncWithOption(srcDirectory, { recursive: false }); 
     });
 
     it('Sync directory non-recursively', function () {
@@ -74,14 +86,13 @@ describe('fileSync(src, dest, options)', function () {
   describe('recursively', function() {
 
     before(function() {
-      _fileSyncWithOption(srcDirectory, {recursive: true}); 
+      _fileSyncWithOption(srcDirectory, { recursive: true }); 
     });
 
     it('Sync directory recursively', function () {
       var _srcFiles = fs.readdirSync(srcDirectory);
       _srcFiles.forEach(function(_file) {
         var _filePathSrc = path.join(srcDirectory, _file),
-            _statSrc = fs.statSync(_filePathSrc),
             _fullPathDest = path.join(destDirectory, _file);
 
         expect(fs.existsSync(_fullPathDest)).to.be.true;
@@ -96,16 +107,15 @@ describe('fileSync(src, dest, options)', function () {
     describe('ignore by function', function() {
       before(function() {
         _clearDestDirectory();
-        _fileSyncWithOption(srcDirectory, {ignore: function(_dir, _file) {
+        _fileSyncWithOption(srcDirectory, { ignore(_dir, _file) {
           return _file === _shouldIgnoreFile;
-        }}); 
+        } }); 
       });
 
       it('Sync directory but ignore a file', function () {
         var _srcFiles = fs.readdirSync(srcDirectory);
         _srcFiles.forEach(function(_file) {
           var _filePathSrc = path.join(srcDirectory, _file),
-              _statSrc = fs.statSync(_filePathSrc),
               _fullPathDest = path.join(destDirectory, _file);
 
           if (_file === _shouldIgnoreFile) {
@@ -121,14 +131,13 @@ describe('fileSync(src, dest, options)', function () {
     describe('ignore by array', function() {
       before(function() {
         _clearDestDirectory();
-        _fileSyncWithOption(srcDirectory, {ignore: _shouldIgnoreFileList}); 
+        _fileSyncWithOption(srcDirectory, { ignore: _shouldIgnoreFileList }); 
       });
 
       it('Sync directory but ignore some files', function () {
         var _srcFiles = fs.readdirSync(srcDirectory);
         _srcFiles.forEach(function(_file) {
           var _filePathSrc = path.join(srcDirectory, _file),
-              _statSrc = fs.statSync(_filePathSrc),
               _fullPathDest = path.join(destDirectory, _file);
 
           if (isElementInArray(_shouldIgnoreFileList, _file)) {
@@ -155,7 +164,6 @@ describe('fileSync(src, dest, options)', function () {
       var _destFiles = fs.readdirSync(destDirectory);
       _destFiles.forEach(function(_file) {
         var _filePathDest = path.join(destDirectory, _file),
-            _statDest = fs.statSync(_filePathDest),
             _fullPathSrc = path.join(destDirectory, _file);
 
         expect(fs.existsSync(_fullPathSrc)).to.be.true;
@@ -176,28 +184,28 @@ describe('fileSync(src, dest, options)', function () {
 
     before(function() {
       fileSync(srcDirectory, destDirectory, {
-        beforeAddFileCallback: function(_fullPathSrc) {
+        beforeAddFileCallback(_fullPathSrc) {
           _add.before = _fullPathSrc;
         },
-        addFileCallback: function(_fullPathSrc, _fullPathDist) {
+        addFileCallback(_fullPathSrc, _fullPathDist) {
           _add.done = _fullPathSrc;
         },
-        updateFileCallback: function(_fullPathSrc, _fullPathDist) {},
-        deleteFileCallback: function(_fullPathSrc, _fullPathDist) {}
+        updateFileCallback(_fullPathSrc, _fullPathDist) {},
+        deleteFileCallback(_fullPathSrc, _fullPathDist) {}
       }); 
 
       fileSync(updateDirectory, destDirectory, {
-        addFileCallback: function(_fullPathSrc, _fullPathDist) {},
-        beforeUpdateFileCallback: function(_fullPathSrc) {
+        addFileCallback(_fullPathSrc, _fullPathDist) {},
+        beforeUpdateFileCallback(_fullPathSrc) {
           _update.before = _fullPathSrc;
         },
-        beforeDeleteFileCallback: function(_fullPathSrc) {
+        beforeDeleteFileCallback(_fullPathSrc) {
           _delete.before = _fullPathSrc;
         },
-        updateFileCallback: function(_fullPathSrc, _fullPathDist) {
+        updateFileCallback(_fullPathSrc, _fullPathDist) {
           _update.done = _fullPathSrc;
         },
-        deleteFileCallback: function(_fullPathSrc, _fullPathDist) {
+        deleteFileCallback(_fullPathSrc, _fullPathDist) {
           _delete.done = _fullPathSrc;
         }
       });
@@ -217,15 +225,3 @@ describe('fileSync(src, dest, options)', function () {
   });
 
 });
-
-// 工具方法
-
-// 判断一个元素是否存在于某个数组中
-var isElementInArray = function(_array, _element) {
-  for(var _i = 0; _i < _array.length; _i++) {
-    if(_element === _array[_i]) {
-      return true;
-    }
-  }
-  return false;
-}

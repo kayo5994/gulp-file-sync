@@ -4,6 +4,15 @@ module.exports = {
         "commonjs": true,
         "es6": true
     },
+    "globals"   : {
+      // For Mocha
+      "describe"   : false,
+      "it"         : false,
+      "before"     : false,
+      "beforeEach" : false,
+      "after"      : false,
+      "afterEach"  : false
+    },
     "extends": "eslint:recommended",
     "parserOptions": {
         "sourceType": "module"
