@@ -17,6 +17,12 @@ var isElementInArray = function(_array, _element) {
   return false;
 }
 
+// 为了消除测试输出中的 Log，避免对测试输出造成影响，随便定义些内容，由于覆盖 callback
+var placeHolderFunction = function() {
+  var _i = 1;
+  _i += 1;
+}
+
 // 相关文件目录
 var srcDirectory = 'test/src',
     destDirectory = 'test/dest',
@@ -26,9 +32,15 @@ describe('fileSync(src, dest, options)', function () {
 
   var _fileSyncWithOption = function(_source, _options) {
     _options = _options || {};
-    _options.addFileCallback = function() {};
-    _options.deleteFileCallback = function() {};
-    _options.updateFileCallback = function() {};
+    _options.addFileCallback = function() {
+      placeHolderFunction();
+    };
+    _options.deleteFileCallback = function() {
+      placeHolderFunction();
+    };
+    _options.updateFileCallback = function() {
+      placeHolderFunction();
+    };
 
     fileSync(_source, destDirectory, _options);
   }
@@ -92,8 +104,7 @@ describe('fileSync(src, dest, options)', function () {
     it('Sync directory recursively', function () {
       var _srcFiles = fs.readdirSync(srcDirectory);
       _srcFiles.forEach(function(_file) {
-        var _filePathSrc = path.join(srcDirectory, _file),
-            _fullPathDest = path.join(destDirectory, _file);
+        var _fullPathDest = path.join(destDirectory, _file);
 
         expect(fs.existsSync(_fullPathDest)).to.be.true;
       });
@@ -115,8 +126,7 @@ describe('fileSync(src, dest, options)', function () {
       it('Sync directory but ignore a file', function () {
         var _srcFiles = fs.readdirSync(srcDirectory);
         _srcFiles.forEach(function(_file) {
-          var _filePathSrc = path.join(srcDirectory, _file),
-              _fullPathDest = path.join(destDirectory, _file);
+          var _fullPathDest = path.join(destDirectory, _file);
 
           if (_file === _shouldIgnoreFile) {
             expect(fs.existsSync(_fullPathDest)).to.be.false;
@@ -137,8 +147,7 @@ describe('fileSync(src, dest, options)', function () {
       it('Sync directory but ignore some files', function () {
         var _srcFiles = fs.readdirSync(srcDirectory);
         _srcFiles.forEach(function(_file) {
-          var _filePathSrc = path.join(srcDirectory, _file),
-              _fullPathDest = path.join(destDirectory, _file);
+          var _fullPathDest = path.join(destDirectory, _file);
 
           if (isElementInArray(_shouldIgnoreFileList, _file)) {
             expect(fs.existsSync(_fullPathDest)).to.be.false;
@@ -163,8 +172,7 @@ describe('fileSync(src, dest, options)', function () {
     it('Sync directory to update and delete some files', function () {
       var _destFiles = fs.readdirSync(destDirectory);
       _destFiles.forEach(function(_file) {
-        var _filePathDest = path.join(destDirectory, _file),
-            _fullPathSrc = path.join(destDirectory, _file);
+        var _fullPathSrc = path.join(destDirectory, _file);
 
         expect(fs.existsSync(_fullPathSrc)).to.be.true;
       });
@@ -187,25 +195,31 @@ describe('fileSync(src, dest, options)', function () {
         beforeAddFileCallback(_fullPathSrc) {
           _add.before = _fullPathSrc;
         },
-        addFileCallback(_fullPathSrc, _fullPathDist) {
+        addFileCallback(_fullPathSrc) {
           _add.done = _fullPathSrc;
         },
-        updateFileCallback(_fullPathSrc, _fullPathDist) {},
-        deleteFileCallback(_fullPathSrc, _fullPathDist) {}
+        updateFileCallback() {
+          placeHolderFunction();
+        },
+        deleteFileCallback() {
+          placeHolderFunction();
+        }
       }); 
 
       fileSync(updateDirectory, destDirectory, {
-        addFileCallback(_fullPathSrc, _fullPathDist) {},
+        addFileCallback() {
+          placeHolderFunction();
+        },
         beforeUpdateFileCallback(_fullPathSrc) {
           _update.before = _fullPathSrc;
         },
         beforeDeleteFileCallback(_fullPathSrc) {
           _delete.before = _fullPathSrc;
         },
-        updateFileCallback(_fullPathSrc, _fullPathDist) {
+        updateFileCallback(_fullPathSrc) {
           _update.done = _fullPathSrc;
         },
-        deleteFileCallback(_fullPathSrc, _fullPathDist) {
+        deleteFileCallback(_fullPathSrc) {
           _delete.done = _fullPathSrc;
         }
       });
