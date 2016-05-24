@@ -32,15 +32,6 @@ describe('fileSync(src, dest, options)', function () {
 
   var _fileSyncWithOption = function(_source, _options) {
     _options = _options || {};
-    _options.addFileCallback = function() {
-      placeHolderFunction();
-    };
-    _options.deleteFileCallback = function() {
-      placeHolderFunction();
-    };
-    _options.updateFileCallback = function() {
-      placeHolderFunction();
-    };
 
     fileSync(_source, destDirectory, _options);
   }
@@ -172,7 +163,7 @@ describe('fileSync(src, dest, options)', function () {
     it('Sync directory to update and delete some files', function () {
       var _destFiles = fs.readdirSync(destDirectory);
       _destFiles.forEach(function(_file) {
-        var _fullPathSrc = path.join(destDirectory, _file);
+        var _fullPathSrc = path.join(updateDirectory, _file);
 
         expect(fs.existsSync(_fullPathSrc)).to.be.true;
       });
@@ -180,6 +171,38 @@ describe('fileSync(src, dest, options)', function () {
 
     after(function() {
       fs.removeSync(updateDirectory + _specialDir);
+    });
+  });
+
+  // 测试新增文件，并且该文件在目标文件夹有同名目录
+  var _specialFile = '/special';
+  describe('add special file', function() {
+
+    before(function() {
+      fs.writeFileSync(updateDirectory + _specialFile);
+      fs.mkdirSync(destDirectory + _specialFile);
+      _fileSyncWithOption(updateDirectory); 
+    });
+
+    it('Sync directory to add files that already exists with the same name directory in target directory', function () {
+      var _destFiles = fs.readdirSync(destDirectory);
+      _destFiles.forEach(function(_file) {
+        var _fullPathSrc = path.join(updateDirectory, _file),
+            _fullPathDest = path.join(destDirectory, _file);
+
+        // 验证目标目录中的文件是否存在于源目录中
+        expect(fs.existsSync(_fullPathSrc)).to.be.true;
+        // 验证目标目录中与源目录文件同名的子目录是否被更新
+        if ('/' + _file.toString === _specialFile) {
+          var _statDest = fs.statSync(_fullPathDest);
+          expect(fs.existsSync(_statDest.isFile())).to.be.true;
+        }
+      });
+    });
+
+    after(function() {
+      fs.removeSync(updateDirectory + _specialFile);
+      fs.removeSync(destDirectory + _specialFile);
     });
   });
 

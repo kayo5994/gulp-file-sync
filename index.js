@@ -98,17 +98,7 @@ var add = function(_options, _src, _dest) {
 		if (_statSrc.isFile()) {
 			if (_existsDest) {
 				var _statDest = fs.statSync(_fullPathDest);
-				if (_statDest.isDirectory()) {
-          // 如果在目标目录中存在一个目录与源目录中的文件同名，则删除该目录并把文件拷贝到目标目录，并且视为更新文件去处理
-					fs.removeSync(_fullPathDest);
-
-          _options.beforeUpdateFileCallback && _options.beforeUpdateFileCallback(_fullPathSrc);
-
-          // forece 参数为 true 表明可以操作 index.js 所在目录更上层的目录内的文件
-					fs.copySync(_fullPathSrc, _fullPathDest, { force: true });
-
-          _options.updateFileCallback(_fullPathSrc, _fullPathDest);
-				} else if (_statDest.isFile()) {
+				if (_statDest.isFile()) {
           // 源目录与目标目录都存在该文件，判断该文件是否为相同的文件（没有被修改过）
 					if (!isSameFile(_fullPathSrc, _fullPathDest)) {
             // 文件不相同，即文件被修改过，则把新文件拷贝到目标目录
