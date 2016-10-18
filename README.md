@@ -8,8 +8,8 @@
 
 [npm-url]:         https://npmjs.org/package/gulp-file-sync
 [npm-image]:       https://img.shields.io/npm/v/gulp-file-sync.svg
-[build-image]:     https://travis-ci.org/kayo5994/gulp-file-sync.png
-[build-result]:    https://travis-ci.org/kayo5994/gulp-file-sync.png
+[build-image]:     https://travis-ci.org/kayo5994/gulp-file-sync.svg
+[build-result]:    https://travis-ci.org/kayo5994/gulp-file-sync
 [coveralls-image]: https://img.shields.io/coveralls/kayo5994/gulp-file-sync.svg?branch=master
 [coveralls-url]:   https://coveralls.io/r/kayo5994/gulp-file-sync
 [david-dm-url]:    https://david-dm.org/kayo5994/gulp-file-sync
