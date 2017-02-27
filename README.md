@@ -87,7 +87,7 @@ default:
 ```js
 var gutil = require('gulp-util');
 function(fullPathSrc, fullPathDest) {
-  gutil.log('同步增加文件到 ' + fullPathDest);
+  gutil.log('File addition synced ' + fullPathDest);
 }
 ```
 
@@ -105,7 +105,7 @@ default:
 ```js
 var gutil = require('gulp-util');
 function(fullPathSrc, fullPathDest) {
-  gutil.log('同步删除文件 ' + fullPathDest);
+  gutil.log('File deletion synced ' + fullPathDest);
 }
 ```
 
@@ -123,7 +123,7 @@ default:
 ```js
 var gutil = require('gulp-util');
 function(fullPathSrc, fullPathDest) {
-  gutil.log('同步修改文件 ' + fullPathDest);
+  gutil.log('File modification synced ' + fullPathDest);
 }
 ```
 

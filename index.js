@@ -153,17 +153,17 @@ var fileSync = function(_src, _dest, _options) {
 
   // 新增文件时输出到控制台的默认 callback 
   _options.addFileCallback  = _options.addFileCallback || function(_fullPathSrc, _fullPathDest) {
-    gutil.log('同步增加文件到 ' + _fullPathDest);
+    gutil.log('File addition synced ' + _fullPathDest);
   };
 
   // 删除文件时输出到控制台的默认 callback
   _options.deleteFileCallback  = _options.deleteFileCallback || function(_fullPathSrc, _fullPathDest) {
-    gutil.log('同步删除文件 ' + _fullPathDest);
+    gutil.log('File deletion synced ' + _fullPathDest);
   };
 
   // 修改文件时输出到控制台的默认 callback
   _options.updateFileCallback  = _options.updateFileCallback || function(_fullPathSrc, _fullPathDest) {
-    gutil.log('同步修改文件 ' + _fullPathDest);
+    gutil.log('File modification synced ' + _fullPathDest);
   };
 
   // 检查目标目录是否存在，如果目标目录不存在则创建一个，如果目标目录不存在而直接写入文件则会 crash
