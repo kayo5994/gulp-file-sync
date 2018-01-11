@@ -8,19 +8,19 @@ var gutil = require('gulp-util'),
 
 var pluginDisplayName = packageInfo.name.replace('gulp-', '');
 
-var isIgnored = function (options, dir, file) {
+var isIgnored = function (options, stats, file) {
     if (options.ignore) {
         if (Array.isArray(options.ignore)) {
             // 为了让 ignore 参数更容易使用，ignore 参数支持传入数组
             // 如果 ignore 的文件为数组，则遍历数组元素并把每个元素封装成一个 options，然后重新调用 isIgnored
             return options.ignore.some(function (filter) {
-                return isIgnored({ignore: filter}, dir, file);
+                return isIgnored({ignore: filter}, stats, file);
             });
         } else {
             var ignoreFileType = typeof options.ignore;
             // 判断参数类型，转换为实际使用的类型
             if (ignoreFileType === 'function') {
-                return options.ignore(dir, file);
+                return options.ignore(stats, file);
 
             } else if (ignoreFileType === 'string') {
                 return options.ignore === file;
@@ -47,12 +47,13 @@ var remove = function (options, src, dest) {
 
     var files = fs.readdirSync(dest);
     files.forEach(function (file) {
-        if (isIgnored(options, dest, file)) {
-            return;
-        }
         var fullPathSrc = path.join(src, file),
             fullPathDest = path.join(dest, file),
             statDest = fs.statSync(fullPathDest);
+
+        if (isIgnored(options, statDest, file)) {
+            return;
+        }
 
         if (statDest.isDirectory() && !options.recursive) {
             // 不允许递归子目录
@@ -88,13 +89,15 @@ var add = function (options, src, dest) {
 
     var files = fs.readdirSync(src);
     files.forEach(function (file) {
-        if (isIgnored(options, src, file)) {
-            return;
-        }
         var fullPathSrc = path.join(src, file),
             fullPathDest = path.join(dest, file),
             existsDest = fs.existsSync(fullPathDest),
             statSrc = fs.statSync(fullPathSrc);
+
+        if (isIgnored(options, statSrc, file)) {
+            return;
+        }
+
         if (statSrc.isFile()) {
             if (existsDest) {
                 var statDest = fs.statSync(fullPathDest);

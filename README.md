@@ -73,7 +73,7 @@ fileSync('source directory', 'destination directory', {
   ignore: /^\.log$/i 
 })
 fileSync('source directory', 'destination directory', {
-  ignore: function(dir, file) {
+  ignore: function(stats, file) {
             return file === '.log';
           } 
 })
