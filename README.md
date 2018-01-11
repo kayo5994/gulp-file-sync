@@ -64,18 +64,21 @@ Either a string, array, regex, or function to exclude some specific files. For e
 ```js
 // ignore all .log files
 fileSync('source directory', 'destination directory', {
-  ignore: '.log'  
+    ignore: '.log'  
 })
 fileSync('source directory', 'destination directory', {
-  ignore: [/^\.log$/i, '.cache'] // Exclude all .log and .cache files
+    ignore: [/^\.log$/i, '.cache'] // Exclude all .log and .cache files
 })
 fileSync('source directory', 'destination directory', {
-  ignore: /^\.log$/i 
+    ignore: /^\.log$/i 
 })
 fileSync('source directory', 'destination directory', {
-  ignore: function(stats, file) {
+    ignore: function(stats, file) {
+        if (stats.isFile()) {
             return file === '.log';
-          } 
+        }
+        return false;
+    } 
 })
 ```
 #### options.addFileCallback

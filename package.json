@@ -5,8 +5,9 @@
   "main": "index.js",
   "dependencies": {
     "crc": "^3.5.0",
+    "fancy-log": "^1.3.2",
     "fs-extra": "^5.0.0",
-    "gulp-util": "^3.0.8"
+    "plugin-error": "^0.1.2"
   },
   "devDependencies": {
     "chai": "^4.1.2",

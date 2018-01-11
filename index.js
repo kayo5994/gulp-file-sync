@@ -1,6 +1,7 @@
 'use strict';
 
-var gutil = require('gulp-util'),
+var log = require('fancy-log'),
+    PluginError = require('plugin-error'),
     fs = require('fs-extra'),
     path = require('path'),
     crc = require('crc'),
@@ -140,10 +141,10 @@ var add = function (options, src, dest) {
 // 同步文件操作
 var fileSync = function (src, dest, options) {
     if (typeof(src) !== 'string') {
-        throw new gutil.PluginError(pluginDisplayName, 'Missing source directory or type is not a string.')
+        throw new PluginError(pluginDisplayName, 'Missing source directory or type is not a string.')
     }
     if (typeof(dest) !== 'string') {
-        throw new gutil.PluginError(pluginDisplayName, 'Missing destination directory or type is not a string.')
+        throw new PluginError(pluginDisplayName, 'Missing destination directory or type is not a string.')
     }
 
     options = options || {};
@@ -153,17 +154,17 @@ var fileSync = function (src, dest, options) {
 
     // 新增文件时输出到控制台的默认 callback
     options.addFileCallback = options.addFileCallback || function (fullPathSrc, fullPathDest) {
-        gutil.log('File addition synced ' + fullPathDest);
+        log('File addition synced ' + fullPathDest);
     };
 
     // 删除文件时输出到控制台的默认 callback
     options.deleteFileCallback = options.deleteFileCallback || function (fullPathSrc, fullPathDest) {
-        gutil.log('File deletion synced ' + fullPathDest);
+        log('File deletion synced ' + fullPathDest);
     };
 
     // 修改文件时输出到控制台的默认 callback
     options.updateFileCallback = options.updateFileCallback || function (fullPathSrc, fullPathDest) {
-        gutil.log('File modification synced ' + fullPathDest);
+        log('File modification synced ' + fullPathDest);
     };
 
     // 检查目标目录是否存在，如果目标目录不存在则创建一个，如果目标目录不存在而直接写入文件则会 crash
