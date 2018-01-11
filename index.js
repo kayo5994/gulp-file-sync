@@ -132,9 +132,6 @@ var add = function (options, src, dest) {
                 return;
             }
 
-            if (!existsDest) {
-                fs.mkdirsSync(fullPathDest);
-            }
             add(options, fullPathSrc, fullPathDest);
         }
     });
