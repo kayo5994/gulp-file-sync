@@ -18,6 +18,10 @@
 
 > Sync file It keeps your files synced between two directory. In other words, any change of files in one directory will automatically take place in another one.
 
+## Migration from Version 1
+
+If you were previously passing a function as an ignore option, you'll have to replace the old function signature `dir` with `stats`. We [made this change](#4) in [2.0.0](https://github.com/kayo5994/gulp-file-sync/releases/tag/2.0.0).
+
 ## Installation
 
 ```shell
