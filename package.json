@@ -1,17 +1,17 @@
 {
   "name": "gulp-file-sync",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "Sync file It keeps your files synced between two directory. In other words, any change of files in one directory will automatically take place in another one.",
   "main": "index.js",
   "dependencies": {
-    "crc": "^3.4.4",
-    "fs-extra": "^0.30.0",
+    "crc": "^3.5.0",
+    "fs-extra": "^5.0.0",
     "gulp-util": "^3.0.8"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "coveralls": "^2.11.16",
-    "mocha": "^3.2.0"
+    "chai": "^4.1.2",
+    "coveralls": "^3.0.0",
+    "mocha": "^4.1.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
