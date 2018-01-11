@@ -130,6 +130,29 @@ describe('fileSync(src, dest, options)', function () {
             });
         });
 
+        var shouldIgnoreRegex = /^ignore\.png$/i;
+        describe('ignore by regex', function () {
+            before(function () {
+                clearDestDirectory();
+                fileSyncWithOption(srcDirectory, {
+                    ignore: shouldIgnoreRegex
+                });
+            });
+
+            it('Sync directory but ignore a file by regex', function () {
+                var srcFiles = fs.readdirSync(srcDirectory);
+                srcFiles.forEach(function (file) {
+                    var fullPathDest = path.join(destDirectory, file);
+
+                    if (file === shouldIgnoreFile) {
+                        expect(fs.existsSync(fullPathDest)).to.be.false;
+                    } else {
+                        expect(fs.existsSync(fullPathDest)).to.be.true;
+                    }
+                });
+            });
+        });
+
         var shouldIgnoreFileList = ['ignore.png', 'ignore_other.png'];
         describe('ignore by array', function () {
             before(function () {
