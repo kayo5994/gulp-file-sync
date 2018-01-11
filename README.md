@@ -163,9 +163,6 @@ This function is called before file is updated on source directory.
 
  * `fullPathSrc` - is the path of file that was updated on source directory.
 
-
-## [Changelog](https://github.com/kayo5994/gulp-file-sync/commits/master)
-
 ## License
 
 MIT (c) 2015 Kayo Lee (330956999@qq.com)
